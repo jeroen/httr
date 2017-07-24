@@ -55,7 +55,11 @@ body_config <- function(body = NULL,
   } else if (encode == "multipart") {
     if (!all(has_name(body)))
       stop("All components of body must be named", call. = FALSE)
-    request(fields = lapply(body, as.character))
+    request(fields = lapply(body, function(x){
+      if(inherits(x, c("form_data", "form_file")))
+        return(x)
+      as.character(x)
+    }))
   }
 }
 
